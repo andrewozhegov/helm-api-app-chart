@@ -1,7 +1,18 @@
 namespace: app
 
+replicas: 1
 app_name: api
 init_name: alembic
+
+images:
+  app:
+    repo: nginx
+    tag: latest
+    pullPolicy: Always
+  init:
+    repo: busybox
+    tag: 1.28
+    pullPolicy: Always
 
 config:
   app:
