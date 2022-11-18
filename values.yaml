@@ -1,2 +1,10 @@
 namespace: app
 
+app_name: api
+init_name: alembic
+
+config:
+  app:
+    SOME_VAR: some_val
+  init:
+    ANOTHER_VAR: another_val
