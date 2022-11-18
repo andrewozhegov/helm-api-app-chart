@@ -1,3 +1,5 @@
+SECRET_KEY = SOPS_AGE_KEY_FILE=.age_secret_key
+
 .PHONY: help
 .DEFAULT_GOAL := help
 
@@ -8,5 +10,15 @@ lint: ## check helm syntax
 	helm lint .
 
 template: ## print preprocessed templates
-	helm template .
+	${SECRET_KEY} helm secrets template -f secrets.enc.yaml .
+
+edit_secrets: ## edit encrypted secrets
+	${SECRET_KEY} helm secrets edit secrets.enc.yaml
+
+encrypt: ## encrypt secrets.dec.yaml > secrets.enc.yaml
+	helm secrets encrypt secrets.dec.yaml > secrets.enc.yaml
+	rm -f secrets.dec.yaml
+
+decrypt: ## decrypt secrets.enc.yaml (do not commit secrets.dec.yaml!)
+	${SECRET_KEY} helm secrets decrypt secrets.enc.yaml > secrets.dec.yaml
 
