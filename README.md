@@ -2,6 +2,8 @@
 
 ## Secrets
 
+⚠️ Of course, in a real repo `.age_secret_key` must be securely hidden!
+
 ### Requirements
 
 ```
