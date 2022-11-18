@@ -4,6 +4,9 @@ replicas: 1
 app_name: api
 init_name: alembic
 
+controller:
+  enableCustomResources: true
+
 service:
   type: NodePort
   port: 80
