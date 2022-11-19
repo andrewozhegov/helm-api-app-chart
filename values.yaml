@@ -8,16 +8,14 @@ nginx-ingress:
   controller:
     enableCustomResources: true
     service:
-      type: NodePort
       httpPort:
         port: 80
-        nodePort: 30081
+        nodePort: 30080
         targetPort: 80
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 80
-  nodePort: 30080
 
 images:
   app:
