@@ -22,5 +22,23 @@ encrypt: ## encrypt secrets.dec.yaml > secrets.enc.yaml
 decrypt: ## decrypt secrets.enc.yaml (do not commit secrets.dec.yaml!)
 	${SECRET_KEY} helm secrets decrypt secrets.enc.yaml > secrets.dec.yaml
 
-install upgrade: ## deploy package
+fluent_install:
+	helm install fluentd fluent/fluentd -n fluent -f fluentd.values.yaml --create-namespace
+fluent_upgrade:
+	helm upgrade fluentd fluent/fluentd -n fluent -f fluentd.values.yaml --create-namespace
+fluent_uninstall:
+	helm uninstall fluentd -n fluent
+
+ingress_install:
+	helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress -f ingress-nginx.values.yaml --create-namespace
+ingress_upgrade:
+	helm upgrade ingress-nginx ingress-nginx/ingress-nginx -n ingress -f ingress-nginx.values.yaml --create-namespace
+ingress_uninstall:
+	helm uninstall ingress-nginx -n ingress
+
+install: fluent_install ingress_install ## install chart, ingress, fluentd
 	${SECRET_KEY} helm secrets $@ api-app . -f secrets.enc.yaml --values values.yaml
+upgrade: dependencies fluent_upgrade ingress_upgrade ## upgrade chart, ingress, fluentd 
+	${SECRET_KEY} helm secrets $@ api-app . -f secrets.enc.yaml --values values.yaml
+uninstall: fluent_uninstall ingress_uninstall ## uninstall chart, ingress, fluentd
+	helm $@ api-app

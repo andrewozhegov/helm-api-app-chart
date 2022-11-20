@@ -1,0 +1,4 @@
+# ingress-nginx conf
+
+controller:
+  watchIngressWithoutClass: true
