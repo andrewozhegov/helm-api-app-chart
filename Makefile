@@ -24,3 +24,6 @@ decrypt: ## decrypt secrets.enc.yaml (do not commit secrets.dec.yaml!)
 
 install upgrade: ## deploy package
 	${SECRET_KEY} helm secrets $@ api-app . -f secrets.enc.yaml --values values.yaml
+
+uninstall: ## package deployment cmds
+	helm uninstall api-app
