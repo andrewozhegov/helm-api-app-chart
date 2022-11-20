@@ -1,0 +1,42 @@
+---
+
+replicas: 1
+minimumMasterNodes: 1
+
+protocol: https
+httpPort: 9200
+transportPort: 9300
+
+# Disable it to use your own elastic-credential Secret.
+secret:
+  enabled: true
+  password: "elastic" # generated randomly if not defined
+
+# Permit co-located instances for solitary minikube virtual machines.
+antiAffinity: "soft"
+
+# Allows you to add any config files in /usr/share/elasticsearch/config/
+# such as elasticsearch.yml and log4j2.properties
+esConfig:
+  elasticsearch.yml: |
+    ingest.geoip.downloader.enabled: false
+
+# Shrink default JVM heap.
+esJavaOpts: "-Xmx128m -Xms128m"
+
+# Allocate smaller chunks of memory per pod.
+resources:
+  requests:
+    cpu: "100m"
+    memory: "512M"
+  limits:
+    cpu: "1000m"
+    memory: "512M"
+
+# Request smaller persistent volumes.
+volumeClaimTemplate:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "standard"
+  resources:
+    requests:
+      storage: 100M

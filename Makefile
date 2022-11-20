@@ -22,6 +22,12 @@ encrypt: ## encrypt secrets.dec.yaml > secrets.enc.yaml
 decrypt: ## decrypt secrets.enc.yaml (do not commit secrets.dec.yaml!)
 	${SECRET_KEY} helm secrets decrypt secrets.enc.yaml > secrets.dec.yaml
 
+elastic_deploy:
+	helm install elasticsearch elastic/elasticsearch -n elastic -f ./elastic.values.yaml --create-namespace
+
+elastic_remove:
+	helm uninstall elasticsearch -n elastic
+
 dependencies:
 	helm dependency update && helm dependency build
 
