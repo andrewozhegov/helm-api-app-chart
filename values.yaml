@@ -4,10 +4,6 @@ replicas: 1
 app_name: api
 init_name: alembic
 
-ingress-nginx:
-  controller:
-    watchIngressWithoutClass: true
-
 service:
   type: ClusterIP
   port: 80
