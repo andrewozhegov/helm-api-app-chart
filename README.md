@@ -1,9 +1,15 @@
 # Helm chart for api-app
 
 ```
-minikube start --driver=podman --kubernetes-version='1.24.0'
+minikube start \
+    --cpus=max \
+    --memory=max \
+    --disk-size='20000mb' \
+    --driver=podman \
+    --kubernetes-version='1.24.0' \
 git clone https://github.com/andrewozhegov/helm-api-app-chart
 cd helm-api-app-chart
+make elastic_deploy # to store logs inside cluster (configure fluent in other way)
 make install
 ```
 
@@ -16,6 +22,7 @@ make install
 
 brew install helm sops age minikube
 
+helm repo add elastic https://helm.elastic.co
 helm repo add fluent https://fluent.github.io/helm-charts
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
