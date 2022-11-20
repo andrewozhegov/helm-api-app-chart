@@ -22,7 +22,10 @@ encrypt: ## encrypt secrets.dec.yaml > secrets.enc.yaml
 decrypt: ## decrypt secrets.enc.yaml (do not commit secrets.dec.yaml!)
 	${SECRET_KEY} helm secrets decrypt secrets.enc.yaml > secrets.dec.yaml
 
-install upgrade: ## deploy package
+dependencies:
+	helm dependency update && helm dependency build
+
+install upgrade: dependencies ## package deployment cmds
 	${SECRET_KEY} helm secrets $@ api-app . -f secrets.enc.yaml --values values.yaml
 
 uninstall: ## package deployment cmds
