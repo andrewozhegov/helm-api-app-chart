@@ -10,12 +10,12 @@ service:
 
 images:
   app:
-    repo: nginx
-    tag: latest
+    repo: nginx         # specify api image here
+    tag: latest         # delete this to use .Chart.AppVersion as tag
     pullPolicy: Always
   init:
-    repo: busybox
-    tag: 1.28
+    repo: busybox       # specify alembic image here
+    tag: 1.28           # delete this to use .Chart.AppVersion as tag
     pullPolicy: Always
 
 config:
