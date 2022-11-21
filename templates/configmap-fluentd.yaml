@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentdconf
+  namespace: {{ .Values.namespace }}
+data:
+  fluent.conf: |
+      <source>
+        @type tail
+        path /var/log/api-app/*.log
+        pos_file /tmp/api-app.log.pos
+        tag api-app.file.logs
+        <parse>
+          @type json
+          time_key time
+          time_type string
+          time_format "%Y-%m-%dT%H:%M:%S.%NZ"
+          #keep_time_key false
+        </parse>
+      </source>
+
+      <filter api-app.file.logs>
+        @type record_transformer
+        <record>
+        hostname ${hostname}
+        </record>
+      </filter>
+
+      <match api-app.file.logs>
+        @type forward
+        send_timeout 60s
+        recover_wait 10s
+        hard_timeout 60s
+        <server>
+          name fluentd_daemonset
+          host fluentd.fluent.svc.cluster.local
+          port 24233
+          weight 60
+        </server>
+        <secondary>
+          @type stdout
+        </secondary>
+      </match>

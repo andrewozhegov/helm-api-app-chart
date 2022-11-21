@@ -24,6 +24,16 @@ spec:
             name: db
         - configMapRef:
             name: {{ .Values.app_name }}-conf
+        volumeMounts:
+          - name: api-app-log
+            mountPath: /var/log/api-app
+      - name: fluentd
+        image: fluent/fluentd:v1.10-1
+        volumeMounts:
+        - name: api-app-log
+          mountPath: /var/log/api-app
+        - name:  fdconf
+          mountPath:  /fluentd/etc/
       initContainers:
       - name: {{ .Values.init_name }}
         image: "{{ .Values.images.init.repo }}:{{ .Values.images.init.tag | default .Chart.AppVersion }}"
@@ -33,3 +43,9 @@ spec:
             name: db
       imagePullSecrets:
       - name: ecr
+      volumes:
+      - name: api-app-log
+        emptyDir: {}
+      - name: fdconf
+        configMap:
+          name: fluentdconf
