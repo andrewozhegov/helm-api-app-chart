@@ -59,9 +59,21 @@ minikube tunnel         # supposed to find and expose right service himself
 
 This approach supposed to work properly with cloud providers too!
 
-* Split API logs
+* Get sensitive `api` file logs
 
-For `api` stdout logs parsing I use `fluend`. To configure it, make changes in `fluentd.values.yaml` file.
+I use `fluentd` as sidecar container to tail application file logs. Then parsed logs will be forwarded to DaemonSet Fluentd. It can be configured in `values.yaml`
+
+```
+logs:
+  path: /var/log/api-app
+  forward:
+    host: fluentd.fluent.svc.cluster.local
+    port: 24233
+```
+
+* Split API stdout logs
+
+For `api` stdout logs parsing I use `fluentd`. To configure it, make changes in `fluentd.values.yaml` file.
 Use `<match kubernetes.var.log.containers.api-app**>` section in `fileConfigs.02_filters.conf` to configure REGEX to determine **sensitive** logs from usual:
 
 ```
