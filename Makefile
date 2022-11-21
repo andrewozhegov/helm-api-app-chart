@@ -36,9 +36,9 @@ ingress_upgrade:
 ingress_uninstall:
 	helm uninstall ingress-nginx -n ingress
 
-install: fluent_install ingress_install ## install chart, ingress, fluentd
+install: ## install chart
 	${SECRET_KEY} helm secrets $@ api-app . -f secrets.enc.yaml --values values.yaml
-upgrade: dependencies fluent_upgrade ingress_upgrade ## upgrade chart, ingress, fluentd 
+upgrade: ## upgrade chart
 	${SECRET_KEY} helm secrets $@ api-app . -f secrets.enc.yaml --values values.yaml
-uninstall: fluent_uninstall ingress_uninstall ## uninstall chart, ingress, fluentd
+uninstall: ## uninstall chart
 	helm $@ api-app
