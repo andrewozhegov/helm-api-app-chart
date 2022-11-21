@@ -7,9 +7,9 @@ data:
   fluent.conf: |
       <source>
         @type tail
-        path /var/log/api-app/*.log
-        pos_file /tmp/api-app.log.pos
-        tag api-app.file.logs
+        path {{ .Values.logs.path }}/*.log
+        pos_file /tmp/{{ .Values.app_name }}-app.log.pos
+        tag {{ .Values.app_name }}-app.file.logs
         <parse>
           @type json
           time_key time
@@ -19,22 +19,22 @@ data:
         </parse>
       </source>
 
-      <filter api-app.file.logs>
+      <filter {{ .Values.app_name }}-app.file.logs>
         @type record_transformer
         <record>
         hostname ${hostname}
         </record>
       </filter>
 
-      <match api-app.file.logs>
+      <match {{ .Values.app_name }}-app.file.logs>
         @type forward
         send_timeout 60s
         recover_wait 10s
         hard_timeout 60s
         <server>
           name fluentd_daemonset
-          host fluentd.fluent.svc.cluster.local
-          port 24233
+          host {{ .Values.logs.forward.host }}
+          port {{ .Values.logs.forward.port }}
           weight 60
         </server>
         <secondary>

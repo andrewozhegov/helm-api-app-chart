@@ -25,13 +25,13 @@ spec:
         - configMapRef:
             name: {{ .Values.app_name }}-conf
         volumeMounts:
-          - name: api-app-log
-            mountPath: /var/log/api-app
+          - name: {{ .Values.app_name }}-app-log
+            mountPath: {{ .Values.logs.path }}
       - name: fluentd
         image: fluent/fluentd:v1.10-1
         volumeMounts:
-        - name: api-app-log
-          mountPath: /var/log/api-app
+        - name: {{ .Values.app_name }}-app-log
+          mountPath: {{ .Values.logs.path }}
         - name:  fdconf
           mountPath:  /fluentd/etc/
       initContainers:
@@ -44,7 +44,7 @@ spec:
       imagePullSecrets:
       - name: ecr
       volumes:
-      - name: api-app-log
+      - name: {{ .Values.app_name }}-app-log
         emptyDir: {}
       - name: fdconf
         configMap:
