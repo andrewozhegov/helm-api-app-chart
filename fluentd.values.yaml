@@ -1,5 +1,18 @@
 # fluentd conf
 
+## Fluentd service
+##
+service:
+  type: "ClusterIP"
+  annotations: {}
+  # loadBalancerIP:
+  # externalTrafficPolicy: Local
+  ports:
+   - name: "forwarder"
+     port: 24233
+     protocol: TCP
+     containerPort: 24233
+
 ## Additional environment variables to set for fluentd pods
 env:
 - name: "FLUENTD_CONF"
@@ -18,6 +31,13 @@ plugins: []
 ##
 fileConfigs:
   01_sources.conf: |-
+    <source>
+      @type forward
+      port 24233
+      add_tag_prefix api-app-log.sensitive
+      @label @API_APP
+    </source>
+
     ## logs from podman
     <source>
       @type tail
@@ -118,7 +138,7 @@ fileConfigs:
 
   04_outputs.conf: |-
     <label @API_APP>
-      <match api-app-log.sensitive>
+      <match api-app-log.sensitive**>
         @type stdout
       </match>
       <match api-app-log.std>
